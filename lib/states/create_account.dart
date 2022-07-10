@@ -20,7 +20,7 @@ class CreateAccount extends StatefulWidget {
 
 class _CreateAccountState extends State<CreateAccount> {
   var educations = MyConstant.educations;
-  String? education;
+  String? education, name, address, special, email, password;
   File? file;
 
   @override
@@ -28,17 +28,21 @@ class _CreateAccountState extends State<CreateAccount> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: newAppBar(),
-      body: ListView(
-        children: [
-          createCenter(widget: newImage()),
-          formName(),
-          dropDownEducate(),
-          formAddress(),
-          formSpecial(),
-          formEmail(),
-          formPassword(),
-          buttonCreateAccount(),
-        ],
+      body: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => FocusScope.of(context).requestFocus(FocusScopeNode()),
+        child: ListView(
+          children: [
+            createCenter(widget: newImage()),
+            formName(),
+            dropDownEducate(),
+            formAddress(),
+            formSpecial(),
+            formEmail(),
+            formPassword(),
+            buttonCreateAccount(),
+          ],
+        ),
       ),
     );
   }
@@ -50,7 +54,23 @@ class _CreateAccountState extends State<CreateAccount> {
         width: 250,
         child: ShowButton(
           label: 'Create Account',
-          pressFunc: () {},
+          pressFunc: () {
+            if (file == null) {
+              MyDialog(context: context).normalDialog(
+                  title: 'No Image ?', subTitle: 'Please Take Photo');
+            } else if ((name?.isEmpty ?? true) ||
+                (address?.isEmpty ?? true) ||
+                (special?.isEmpty ?? true) ||
+                (email?.isEmpty ?? true) ||
+                (password?.isEmpty ?? true)) {
+              MyDialog(context: context).normalDialog(
+                  title: 'Have Space ?', subTitle: 'Please Fill Every Blank');
+            } else if (education == null) {
+              MyDialog(context: context).normalDialog(
+                  title: 'ระดับการศึกษา ?',
+                  subTitle: 'กรุณาเลือก ระดับการศึกษา');
+            } else {}
+          },
         ),
       ),
     );
@@ -61,7 +81,9 @@ class _CreateAccountState extends State<CreateAccount> {
       widget: ShowForm(
         hint: 'Password :',
         iconData: Icons.lock_outline,
-        changeFunc: (String string) {},
+        changeFunc: (String string) {
+          password = string.trim();
+        },
       ),
     );
   }
@@ -71,7 +93,9 @@ class _CreateAccountState extends State<CreateAccount> {
       widget: ShowForm(
         hint: 'Email :',
         iconData: Icons.email_outlined,
-        changeFunc: (String string) {},
+        changeFunc: (String string) {
+          email = string.trim();
+        },
       ),
     );
   }
@@ -81,7 +105,9 @@ class _CreateAccountState extends State<CreateAccount> {
       widget: ShowForm(
         hint: 'ความสามารถพิเศษ :',
         iconData: Icons.star_border_outlined,
-        changeFunc: (String string) {},
+        changeFunc: (String string) {
+          special = string.trim();
+        },
       ),
     );
   }
@@ -93,7 +119,9 @@ class _CreateAccountState extends State<CreateAccount> {
         textInputType: TextInputType.multiline,
         hint: 'Address :',
         iconData: Icons.home_outlined,
-        changeFunc: (String string) {},
+        changeFunc: (String string) {
+          address = string.trim();
+        },
       ),
     );
   }
@@ -131,7 +159,9 @@ class _CreateAccountState extends State<CreateAccount> {
       widget: ShowForm(
         hint: 'Display Name :',
         iconData: Icons.fingerprint,
-        changeFunc: (String string) {},
+        changeFunc: (String string) {
+          name = string.trim();
+        },
       ),
     );
   }
@@ -152,7 +182,8 @@ class _CreateAccountState extends State<CreateAccount> {
               ? const ShowImage(
                   path: 'images/avatar.png',
                 )
-              : CircleAvatar(radius: 125,
+              : CircleAvatar(
+                  radius: 125,
                   backgroundImage: FileImage(file!),
                 ),
           Positioned(
