@@ -8,12 +8,16 @@ class ShowForm extends StatelessWidget {
   final IconData iconData;
   final Function(String) changeFunc;
   final bool? obsecu;
+  final TextInputType? textInputType;
+  final int? maxLine;
   const ShowForm({
     Key? key,
     required this.hint,
     required this.iconData,
     required this.changeFunc,
     this.obsecu,
+    this.textInputType,
+    this.maxLine,
   }) : super(key: key);
 
   @override
@@ -21,8 +25,11 @@ class ShowForm extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(top: 16),
       width: 250,
-      height: 40,
-      child: TextFormField(obscureText: obsecu ?? false,
+      height: maxLine == null ? 40 : null,
+      child: TextFormField(
+        maxLines: maxLine ?? 1,
+        keyboardType: textInputType ?? TextInputType.text,
+        obscureText: obsecu ?? false,
         onChanged: changeFunc,
         style: MyConstant().h3Style(),
         decoration: InputDecoration(
